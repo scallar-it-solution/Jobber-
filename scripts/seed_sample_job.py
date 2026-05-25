@@ -19,9 +19,9 @@ def main() -> None:
     db.init_schema()
     inserted = db.insert_job(
         JobRecord(
-            platform="sample",
-            title="Data Engineer",
-            company="Sample Analytics",
+            platform="indeed",
+            title="Data Engineer Production Test",
+            company="Sample Analytics Prod",
             location="Noida",
             jd_text=SAMPLE_JD,
             apply_url="https://example.com/jobs/data-engineer",
