@@ -147,16 +147,16 @@ else
 fi
 
 echo '== match =='
-run_app python -B autoapply match --limit 25 | tee /tmp/autoapply-prod-match.log
+run_app python -B autoapply match --min-grade D --limit 25 | tee /tmp/autoapply-prod-match.log
 
 echo '== apply dry-run =='
-run_app python -B autoapply apply --max-daily 5 | tee /tmp/autoapply-prod-apply.log
+run_app python -B autoapply apply --min-grade D --max-daily 5 | tee /tmp/autoapply-prod-apply.log
 
 echo '== report =='
 run_app python -B autoapply report | tee /tmp/autoapply-prod-report.log
 
 echo '== db summary =='
-docker run --rm --network host -e DATABASE_URL="`$DATABASE_URL" autoapply-prod-test:latest python - <<'PY'
+docker run --rm -i --network host -e DATABASE_URL="`$DATABASE_URL" autoapply-prod-test:latest python - <<'PY'
 import os
 import psycopg
 with psycopg.connect(os.environ['DATABASE_URL']) as conn:
