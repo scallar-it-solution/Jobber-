@@ -106,6 +106,7 @@ run_app() {
     -e DEPLOY_TARGET=aws \
     -e APPLIER_DRY_RUN=true \
     -e APPLIER_ANSWER_MODE=local \
+    -e PYTHONPATH=/app \
     -e DATABASE_URL="`$DATABASE_URL" \
     -e REDIS_URL="`$REDIS_URL" \
     -v "`$PWD/reports:/app/reports" \
