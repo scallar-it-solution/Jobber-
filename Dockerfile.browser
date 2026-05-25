@@ -1,0 +1,22 @@
+FROM mcr.microsoft.com/playwright/python:v1.44.0-jammy
+
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+
+WORKDIR /app
+COPY requirements-prod-test.txt .
+RUN pip install --no-cache-dir -r requirements-prod-test.txt playwright==1.44.0
+
+COPY common ./common
+COPY scraper ./scraper
+COPY matcher ./matcher
+COPY applier ./applier
+COPY batch ./batch
+COPY reports ./reports
+COPY config ./config
+COPY data ./data
+COPY scripts ./scripts
+COPY autoapply autoapply
+COPY autoapply_cli.py autoapply_cli.py
+
+CMD ["python", "-B", "autoapply", "--help"]

@@ -155,6 +155,15 @@ For an isolated production-style test on the existing VM:
 
 This deploys to `~/autoapply-prod-test`, starts only project-scoped PostgreSQL and Redis containers on localhost ports `55432` and `56379`, runs Phase 1 with dry-run applications, and leaves existing ports/services alone.
 
+For browser-based job board testing with Playwright:
+
+```powershell
+.\scripts\aws_production_test.ps1 -BrowserRuntime -Platform naukri -Limit 2
+.\scripts\aws_production_test.ps1 -BrowserRuntime -Platform linkedin -Limit 2
+```
+
+If a board blocks the scraper or returns an empty page, debug HTML and screenshots are written under `reports/debug/` in the isolated VM folder.
+
 ## Notes
 
 - Scrapers include random delays and optional proxies through `PROXY_LIST`.

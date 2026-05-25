@@ -2,6 +2,7 @@ param(
   [string]$RemoteDir = "",
   [string]$Platform = "indeed",
   [int]$Limit = 2,
+  [switch]$BrowserRuntime,
   [switch]$SkipInstall,
   [switch]$SkipUpload,
   [switch]$SkipScrape
@@ -56,7 +57,7 @@ if (-not $SkipUpload) {
     "autoapply", "autoapply_cli.py", "requirements.txt", "requirements-ml.txt",
     "requirements-prod-test.txt",
     "pyproject.toml", "Dockerfile.applier", "Dockerfile.matcher",
-    "Dockerfile.runtime", "Dockerfile.scraper", "docker-compose.yml", "README.md"
+    "Dockerfile.browser", "Dockerfile.runtime", "Dockerfile.scraper", "docker-compose.yml", "README.md"
   )
 
   foreach ($item in $items) {
@@ -77,6 +78,7 @@ if (-not $SkipUpload) {
 
 $installFlag = if ($SkipInstall) { "1" } else { "0" }
 $scrapeFlag = if ($SkipScrape) { "1" } else { "0" }
+$dockerfile = if ($BrowserRuntime) { "Dockerfile.browser" } else { "Dockerfile.runtime" }
 
 $remoteScript = @"
 set -euo pipefail
@@ -98,7 +100,7 @@ docker compose version
 
 if [ '$installFlag' != '1' ]; then
   echo '== docker build runtime =='
-  docker build -f Dockerfile.runtime -t autoapply-prod-test:latest . >/tmp/autoapply-docker-build.log
+  docker build -f '$dockerfile' -t autoapply-prod-test:latest . >/tmp/autoapply-docker-build.log
 fi
 
 run_app() {
@@ -107,6 +109,7 @@ run_app() {
     -e APPLIER_DRY_RUN=true \
     -e APPLIER_ANSWER_MODE=local \
     -e PYTHONPATH=/app \
+    -e SCRAPER_DEBUG_DIR=/app/reports/debug \
     -e DATABASE_URL="`$DATABASE_URL" \
     -e REDIS_URL="`$REDIS_URL" \
     -v "`$PWD/reports:/app/reports" \
@@ -139,6 +142,9 @@ if [ '$scrapeFlag' != '1' ]; then
   set -e
   if [ "`$scrape_status" -ne 0 ]; then
     echo "Live scrape failed or was blocked with status `$scrape_status; seeding a Noida sample job for downstream production test."
+    run_app python -B scripts/seed_sample_job.py
+  elif ! grep -Eq 'inserted=[1-9][0-9]*' /tmp/autoapply-prod-scrape.log; then
+    echo "Live scrape completed but inserted zero jobs; seeding a Noida sample job for downstream production test."
     run_app python -B scripts/seed_sample_job.py
   fi
 else
