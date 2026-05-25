@@ -12,15 +12,21 @@ from scraper.base import JobRecord, JobSearchFilters, Scraper
 
 class IndeedScraper(Scraper):
     platform = "indeed"
-    base_url = "https://www.indeed.com"
+
+    def base_url_for(self, filters: JobSearchFilters) -> str:
+        location = (filters.location or "").lower()
+        if any(city in location for city in ["noida", "gurgaon", "gurugram", "delhi", "india"]):
+            return "https://in.indeed.com"
+        return "https://www.indeed.com"
 
     def scrape(self, filters: JobSearchFilters) -> list[JobRecord]:
+        base_url = self.base_url_for(filters)
         params = {
             "q": filters.keyword_query(),
             "l": filters.location or "Remote",
             "fromage": filters.date_posted_within_days,
         }
-        url = f"{self.base_url}/jobs?{urlencode(params)}"
+        url = f"{base_url}/jobs?{urlencode(params)}"
         session = requests.Session()
         headers = {"User-Agent": random_user_agent(), "Accept-Language": "en-US,en;q=0.9"}
         response = session.get(url, headers=headers, proxies=proxy_for_requests(), timeout=25)
@@ -39,7 +45,7 @@ class IndeedScraper(Scraper):
             if not title_el or not company_el:
                 continue
 
-            apply_url = urljoin(self.base_url, link_el.get("href", "")) if link_el else url
+            apply_url = urljoin(base_url, link_el.get("href", "")) if link_el else url
             jd_text = self._fetch_description(session, apply_url, headers)
             jobs.append(
                 JobRecord(

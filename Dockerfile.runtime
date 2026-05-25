@@ -15,8 +15,8 @@ COPY batch ./batch
 COPY reports ./reports
 COPY config ./config
 COPY data ./data
+COPY scripts ./scripts
 COPY autoapply autoapply
 COPY autoapply_cli.py autoapply_cli.py
 
 CMD ["python", "-B", "autoapply", "--help"]
-

@@ -79,7 +79,7 @@ $installFlag = if ($SkipInstall) { "1" } else { "0" }
 $scrapeFlag = if ($SkipScrape) { "1" } else { "0" }
 
 $remoteScript = @"
-set -eu
+set -euo pipefail
 REMOTE_DIR="$RemoteDir"
 case "`$REMOTE_DIR" in /home/*/autoapply-*|/tmp/autoapply-*) ;; *) echo "Unsafe remote dir: `$REMOTE_DIR"; exit 64;; esac
 cd "`$REMOTE_DIR"
@@ -132,7 +132,17 @@ run_app python -B autoapply init-db
 
 if [ '$scrapeFlag' != '1' ]; then
   echo '== live scrape =='
+  set +e
   run_app python -B autoapply phase1 --platform '$Platform' --limit $Limit | tee /tmp/autoapply-prod-scrape.log
+  scrape_status="`${PIPESTATUS[0]}"
+  set -e
+  if [ "`$scrape_status" -ne 0 ]; then
+    echo "Live scrape failed or was blocked with status `$scrape_status; seeding a Noida sample job for downstream production test."
+    run_app python -B scripts/seed_sample_job.py
+  fi
+else
+  echo '== seed sample job =='
+  run_app python -B scripts/seed_sample_job.py
 fi
 
 echo '== match =='
