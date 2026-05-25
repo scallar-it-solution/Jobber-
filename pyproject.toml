@@ -1,0 +1,12 @@
+[project]
+name = "autoapply"
+version = "0.1.0"
+description = "Autonomous job search, matching, and application pipeline for Data and AI roles."
+requires-python = ">=3.11"
+
+[tool.black]
+line-length = 100
+
+[tool.ruff]
+line-length = 100
+

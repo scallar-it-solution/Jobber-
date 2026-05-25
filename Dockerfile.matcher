@@ -1,0 +1,16 @@
+FROM python:3.11-slim
+
+WORKDIR /app
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY common ./common
+COPY matcher ./matcher
+COPY reports ./reports
+COPY config ./config
+COPY data ./data
+COPY infra ./infra
+
+ENTRYPOINT ["python", "-m", "awslambdaric"]
+CMD ["infra.lambda_runtime.handler.matcher_handler"]
+

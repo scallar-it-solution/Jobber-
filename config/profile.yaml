@@ -1,0 +1,18 @@
+name: Deepesh Patel
+email: deepeshpatelinfinix@gmail.com
+phone: "+91XXXXXXXXXX"
+location: Noida, Uttar Pradesh, India
+linkedin: linkedin.com/in/deepesh-patel-999070205
+github: github.com/Patel308
+target_roles:
+  - Data Engineer
+  - Cloud Engineer
+target_locations:
+  - Noida
+  - Gurgaon
+  - Gurugram
+salary_min_inr: 1200000
+salary_min_usd: 80000
+years_experience: 1
+notice_period: immediate
+resume_path: ./data/resume/data_engineer_resume.pdf

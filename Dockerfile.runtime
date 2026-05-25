@@ -1,0 +1,22 @@
+FROM python:3.12-slim
+
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+
+WORKDIR /app
+COPY requirements-prod-test.txt .
+RUN pip install --no-cache-dir -r requirements-prod-test.txt
+
+COPY common ./common
+COPY scraper ./scraper
+COPY matcher ./matcher
+COPY applier ./applier
+COPY batch ./batch
+COPY reports ./reports
+COPY config ./config
+COPY data ./data
+COPY autoapply autoapply
+COPY autoapply_cli.py autoapply_cli.py
+
+CMD ["python", "-B", "autoapply", "--help"]
+

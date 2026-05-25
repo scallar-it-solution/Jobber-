@@ -1,0 +1,12 @@
+[
+  {
+    "name": "li_at",
+    "value": "replace-with-exported-cookie",
+    "domain": ".linkedin.com",
+    "path": "/",
+    "httpOnly": true,
+    "secure": true,
+    "sameSite": "None"
+  }
+]
+

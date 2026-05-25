@@ -1,0 +1,11 @@
+answers:
+  - pattern: "(?i)phone|mobile"
+    answer: "{phone}"
+  - pattern: "(?i)email"
+    answer: "{email}"
+  - pattern: "(?i)notice period|when can you join|start date"
+    answer: "I am available to join {notice_period}."
+  - pattern: "(?i)years.*experience|experience.*years"
+    answer: "I have {years_experience} years of hands-on experience across data engineering, AI engineering, automation, and cloud-based data workflows."
+  - pattern: "(?i)current location|where are you based"
+    answer: "I am based in {location}."

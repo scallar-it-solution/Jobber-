@@ -1,0 +1,17 @@
+FROM mcr.microsoft.com/playwright/python:v1.44.0-jammy
+
+WORKDIR /app
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY common ./common
+COPY scraper ./scraper
+COPY reports ./reports
+COPY matcher ./matcher
+COPY config ./config
+COPY data ./data
+COPY infra ./infra
+
+ENTRYPOINT ["python", "-m", "awslambdaric"]
+CMD ["infra.lambda_runtime.handler.scraper_handler"]
+

@@ -1,0 +1,27 @@
+date_posted_within_days: 3
+min_match_grade: B
+max_daily_applies: 25
+excluded_companies: []
+excluded_keywords:
+  - "2+ years"
+  - "3+ years"
+  - "4+ years"
+  - "5+ years"
+  - "10+ years"
+  - "15+ years"
+  - "senior"
+  - "lead engineer"
+  - "principal engineer"
+platforms:
+  linkedin: true
+  indeed: true
+  naukri: true
+  wellfound: true
+roles:
+  - Data Engineer
+  - Cloud Engineer
+locations:
+  - Noida
+  - Gurgaon
+experience_years: 1
+remote: false
